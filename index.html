@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="./images/favicon.ico"/>
+    <title>UncleZhang</title>
+    <link href="https://fonts.cdnfonts.com/css/futura-md-bt" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Futura Md BT', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .logo-container {
+            text-align: center;
+            padding: 40px 50px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 90%;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo {
+            width: 140px;
+            height: auto;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            animation: float 6s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+        
+        .logo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 2;
+            cursor: pointer;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .brand-name {
+            margin-top: 25px;
+            font-size: 22px;
+            color: #333;
+            font-weight: 500;
+            font-style: italic;
+            letter-spacing: 2px;
+            font-family: 'Futura Md BT', sans-serif;
+        }
+        
+        /* 桌面端二维码弹窗 */
+        .qrcode-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.4s ease;
+            width: 260px;
+        }
+        
+        .logo-container:hover .qrcode-popup {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        /* 移动端微信加好友弹窗 */
+        .wechat-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .wechat-popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .wechat-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            max-width: 90%;
+            width: 320px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .wechat-popup.active .wechat-content {
+            transform: scale(1);
+        }
+        
+        .wechat-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .qrcode-wrapper {
+            position: relative;
+            display: inline-block;
+            margin: 0 auto 15px;
+        }
+        
+        .wechat-image {
+            width: 200px;
+            height: 200px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            pointer-events: none;
+        }
+        
+        .qrcode-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 2;
+        }
+        
+        .wechat-image img {
+            max-width: 100%;
+            height: auto;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+        
+        .wechat-tip {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .wechat-button {
+            background: #07C160;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+            font-weight: 500;
+        }
+        
+        .wechat-button:hover {
+            background: #06AE56;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+            background: #f5f5f5;
+        }
+        
+        .qrcode-title {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-family: 'Futura Md BT', sans-serif;
+        }
+        
+        .qrcode-image {
+            width: 180px;
+            height: 180px;
+            background-color: #f5f5f5;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        
+        .qrcode-image img {
+            max-width: 100%;
+            height: auto;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+        
+        .email-address {
+            font-size: 14px;
+            color: #666;
+            font-family: 'Futura Md BT', sans-serif;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .email-address:hover {
+            background-color: #f0f0f0;
+            color: #4A90E2;
+        }
+        
+        .email-address.copied::after {
+            content: "✓ 邮箱已复制";
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            animation: fadeOut 2s ease forwards;
+            z-index: 10;
+        }
+        
+        .email-label {
+            display: inline-block;
+
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            font-family: 'Futura Md BT', sans-serif;
+        }
+        
+        /* 移动端触摸优化 */
+        @media (hover: none) {
+            .logo-container:hover {
+                transform: none;
+            }
+            
+            .logo:hover {
+                transform: none;
+            }
+            
+            .email-address:hover {
+                background-color: transparent;
+                color: #666;
+            }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .logo-container {
+                padding: 30px 40px;
+            }
+            
+            .brand-name {
+                font-size: 18px;
+                margin-top: 20px;
+            }
+            
+            .qrcode-popup {
+                width: 220px;
+            }
+            
+            .qrcode-image {
+                width: 160px;
+                height: 160px;
+            }
+            
+            /* 在移动端隐藏桌面端二维码弹窗 */
+            .qrcode-popup {
+                display: none;
+            }
+            
+            /* 移动端触摸反馈 */
+            .logo:active {
+                transform: scale(0.95);
+            }
+            
+            .email-address:active {
+                background-color: #f0f0f0;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            /* 在桌面端隐藏移动端微信弹窗 */
+            .wechat-popup {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-container {
+                padding: 25px 30px;
+            }
+            
+            .brand-name {
+                font-size: 16px;
+                margin-top: 15px;
+            }
+            
+            .qrcode-popup {
+                width: 200px;
+            }
+            
+            .qrcode-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .wechat-content {
+                width: 280px;
+                padding: 20px;
+            }
+            
+            .wechat-image {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .email-address {
+                font-size: 13px;
+            }
+        }
+        
+        /* 深色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            }
+            
+            .logo-container {
+                background-color: rgba(30, 30, 30, 0.9);
+                color: #f0f0f0;
+            }
+            
+            .brand-name {
+                color: #f0f0f0;
+            }
+            
+            .qrcode-popup, .wechat-content {
+                background: #2d2d2d;
+                color: #f0f0f0;
+            }
+            
+            .qrcode-title, .wechat-title {
+                color: #f0f0f0;
+            }
+            
+            .wechat-tip, .email-address {
+                color: #ccc;
+            }
+            
+            .wechat-image, .qrcode-image {
+                background-color: #3d3d3d;
+                border-color: #555;
+            }
+        }
+        
+        /* 无障碍优化 */
+        .logo-overlay:focus, .email-address:focus, .wechat-button:focus, .close-btn:focus {
+            outline: 2px solid #4A90E2;
+            outline-offset: 2px;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* 保护层 */
+        .protection-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 保护层 -->
+    <div class="protection-layer" id="protectionLayer"></div>
+    
+    <div class="logo-container">
+        <div class="logo-wrapper">
+            <div class="logo-overlay" id="logoOverlay"></div>
+            <img src="./images/tx.png" alt="LOGO" class="logo">
+        </div>
+        <div class="brand-name">ZHANG</div>
+        
+        <!-- 桌面端微信二维码弹出层 -->
+        <div class="qrcode-popup">
+            <div class="qrcode-title">微信扫码加我好友</div>
+            <div class="qrcode-image">
+                <img src="./images/wechat-qr.jpg" alt="微信加好友二维码">
+            </div>
+            <div class="email-address" id="copyEmail">
+                <span class="email-label">email:</span>
+                hi@unclezhang.com
+            </div>
+        </div>
+    </div>
+    
+    <!-- 移动端微信加好友弹窗 -->
+    <div class="wechat-popup" id="wechatPopup">
+        <div class="wechat-content">
+            <button class="close-btn" id="closePopup" aria-label="关闭">×</button>
+            <div class="wechat-title">添加微信好友</div>
+            <div class="qrcode-wrapper">
+                <div class="qrcode-overlay" id="qrcodeOverlay"></div>
+                <div class="wechat-image">
+                    <img src="./images/wechat-qr.jpg" alt="微信加好友二维码">
+                </div>
+            </div>
+            <div class="wechat-tip">
+                长按识别二维码，添加微信好友
+            </div>
+            <div class="email-address" id="copyMobileEmail">
+                <span class="email-label">email:</span>
+                hi@unclezhang.com
+            </div>
+            <button class="wechat-button" id="copyWechatId">复制微信号</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        &copy; <span id="currentYear"></span> UncleZhang. All rights reserved.
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyEmailElement = document.getElementById('copyEmail');
+            const copyMobileEmailElement = document.getElementById('copyMobileEmail');
+            const logoOverlay = document.getElementById('logoOverlay');
+            const qrcodeOverlay = document.getElementById('qrcodeOverlay');
+            const wechatPopup = document.getElementById('wechatPopup');
+            const closePopup = document.getElementById('closePopup');
+            const copyWechatId = document.getElementById('copyWechatId');
+            const currentYearElement = document.getElementById('currentYear');
+            const protectionLayer = document.getElementById('protectionLayer');
+            
+            // 设置当前年份
+            currentYearElement.textContent = new Date().getFullYear();
+            
+            // ========== 图片保护功能 ==========
+            
+            // 禁用右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁用拖拽
+            document.addEventListener('dragstart', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // 禁用选择文本
+            document.addEventListener('selectstart', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // 禁用复制
+            document.addEventListener('copy', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // 禁用剪切
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 禁用F12开发者工具
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                    (e.ctrlKey && e.key === 'u')) {
+                    e.preventDefault();
+                    showProtectionMessage();
+                    return false;
+                }
+            });
+            
+            // 显示保护提示
+            function showProtectionMessage() {
+                // 可以在这里添加保护提示，比如显示一个临时提示框
+                console.log('图片保护：此操作已被禁止');
+            }
+            
+            // 保护层点击事件
+            protectionLayer.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // ========== 正常功能 ==========
+            
+            // 复制邮箱地址功能
+            function copyEmail(emailElement) {
+                const email = 'hi@unclezhang.com';
+                
+                // 优先使用现代 Clipboard API
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(email)
+                        .then(() => {
+                            emailElement.classList.add('copied');
+                            setTimeout(() => {
+                                emailElement.classList.remove('copied');
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            fallbackCopyText(email, emailElement);
+                        });
+                } else {
+                    fallbackCopyText(email, emailElement);
+                }
+            }
+            
+            // 传统复制方法
+            function fallbackCopyText(text, emailElement) {
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = text;
+                tempTextArea.style.position = 'fixed';
+                tempTextArea.style.opacity = '0';
+                document.body.appendChild(tempTextArea);
+                
+                tempTextArea.select();
+                tempTextArea.setSelectionRange(0, 99999);
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        emailElement.classList.add('copied');
+                        setTimeout(() => {
+                            emailElement.classList.remove('copied');
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('复制失败:', err);
+                }
+                
+                document.body.removeChild(tempTextArea);
+            }
+            
+            // 桌面端邮箱复制
+            copyEmailElement.addEventListener('click', function() {
+                copyEmail(this);
+            });
+            
+            // 移动端邮箱复制
+            copyMobileEmailElement.addEventListener('click', function() {
+                copyEmail(this);
+            });
+            
+            // 检测设备类型
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // 移动端点击LOGO打开微信弹窗
+            logoOverlay.addEventListener('click', function() {
+                if (isMobile) {
+                    wechatPopup.classList.add('active');
+                }
+            });
+            
+            // 桌面端长按LOGO也打开微信弹窗（便于测试）
+            let pressTimer;
+            logoOverlay.addEventListener('mousedown', function() {
+                if (!isMobile) {
+                    pressTimer = setTimeout(() => {
+                        wechatPopup.classList.add('active');
+                    }, 1000);
+                }
+            });
+            
+            logoOverlay.addEventListener('mouseup', function() {
+                clearTimeout(pressTimer);
+            });
+            
+            logoOverlay.addEventListener('mouseleave', function() {
+                clearTimeout(pressTimer);
+            });
+            
+            // 关闭弹窗
+            closePopup.addEventListener('click', function() {
+                wechatPopup.classList.remove('active');
+            });
+            
+            // 点击弹窗背景关闭
+            wechatPopup.addEventListener('click', function(e) {
+                if (e.target === wechatPopup) {
+                    wechatPopup.classList.remove('active');
+                }
+            });
+            
+            // 复制微信号
+            copyWechatId.addEventListener('click', function() {
+                const wechatId = '18576003061';
+                const button = this;
+                
+                // 优先使用现代 Clipboard API
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(wechatId)
+                        .then(() => {
+                            button.innerHTML = '<span class="loading"></span> 已复制';
+                            button.style.background = '#4CAF50';
+                            
+                            setTimeout(() => {
+                                button.innerHTML = '复制微信号';
+                                button.style.background = '#07C160';
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            fallbackCopyWechatId(wechatId, button);
+                        });
+                } else {
+                    fallbackCopyWechatId(wechatId, button);
+                }
+            });
+            
+            // 传统复制微信号方法
+            function fallbackCopyWechatId(wechatId, button) {
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = wechatId;
+                tempTextArea.style.position = 'fixed';
+                tempTextArea.style.opacity = '0';
+                document.body.appendChild(tempTextArea);
+                
+                tempTextArea.select();
+                tempTextArea.setSelectionRange(0, 99999);
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        button.innerHTML = '<span class="loading"></span> 已复制';
+                        button.style.background = '#4CAF50';
+                        
+                        setTimeout(() => {
+                            button.innerHTML = '复制微信号';
+                            button.style.background = '#07C160';
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('复制失败:', err);
+                }
+                
+                document.body.removeChild(tempTextArea);
+            }
+            
+            // ESC键关闭弹窗
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    wechatPopup.classList.remove('active');
+                }
+            });
+            
+            // 防止背景滚动当弹窗打开时
+            wechatPopup.addEventListener('transitionstart', function() {
+                if (this.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // 初始化提示
+            console.log('页面已加载 - 图片保护功能已启用');
+        });
+    </script>
+</body>
+</html>
