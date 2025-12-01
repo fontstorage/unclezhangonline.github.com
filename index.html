@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" href="./images/favicon.ico"/>
     <title>UncleZhang</title>
+	<link rel="shortcut icon" href="./images/favicon.ico"/>
     <link href="https://fonts.cdnfonts.com/css/futura-md-bt" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -18,6 +19,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
@@ -28,14 +30,25 @@
             -ms-user-select: none;
         }
         
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            z-index: 2;
+            width: 10%; /* 主容器宽度为10% */
+            max-width: 500px; /* 最大宽度限制 */
+            min-width: 240px; /* 最小宽度限制 */
+        }
+        
         .logo-container {
             text-align: center;
-            padding: 40px 50px;
+            padding: 40px 30px; /* 调整内边距 */
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            max-width: 90%;
+            width: 100%; /* 宽度100%填充父容器 */
             position: relative;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -52,7 +65,7 @@
         }
         
         .logo {
-            width: 140px;
+            width: 120px; /* 稍微缩小以适应新宽度 */
             height: auto;
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
             animation: float 6s ease-in-out infinite;
@@ -94,7 +107,7 @@
         
         .brand-name {
             margin-top: 25px;
-            font-size: 22px;
+            font-size: 20px; /* 稍微缩小字体 */
             color: #333;
             font-weight: 500;
             font-style: italic;
@@ -102,36 +115,134 @@
             font-family: 'Futura Md BT', sans-serif;
         }
         
-        /* 桌面端二维码弹窗 */
-        .qrcode-popup {
-            position: absolute;
+        /* 社交媒体图标区域 - 宽度统一为10% */
+        .social-media {
+            display: flex;
+            gap: 15px; /* 调整间隙 */
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 100%; /* 宽度100%填充父容器 */
+            margin-top: 0;
+        }
+        
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            background-color: #555; /* 深灰色 */
+            text-decoration: none; /* 移除链接下划线 */
+        }
+        
+        /* 图片图标样式 - 统一为深色 */
+        .social-icon.image-icon {
+            background-color: #555; /* 改为深灰色与其他图标统一 */
+            overflow: hidden;
+        }
+        
+        .social-icon.image-icon i {
+            font-size: 22px;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+            background-color: #333; /* 悬停时变为更深的灰色 */
+        }
+        
+        .social-icon.image-icon:hover {
+            background-color: #333; /* 图片图标悬停时也变为更深的灰色 */
+        }
+        
+        /* 邮箱复制成功提示 - 垂直居中显示，放大10% */
+        .copy-success-tooltip {
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            z-index: 10;
+            transform: translate(-50%, -50%) scale(0.77); /* 放大10%（从0.7到0.77） */
+            background: #4CAF50;
+            color: white;
+            padding: 13px 22px; /* 放大内边距10% */
+            border-radius: 8.8px; /* 放大圆角10% */
+            font-size: 14.3px; /* 放大字体10%（从13px到14.3px） */
+            font-weight: 500;
+            box-shadow: 0 8.8px 22px rgba(0, 0, 0, 0.2); /* 放大阴影10% */
+            z-index: 1000;
             opacity: 0;
-            transition: all 0.4s ease;
-            width: 260px;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8.8px; /* 放大间隙10% */
+            pointer-events: none;
+            transform-origin: center; /* 确保从中心缩放 */
         }
         
-        .logo-container:hover .qrcode-popup {
+        .copy-success-tooltip.show {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(0.77); /* 保持放大状态 */
         }
         
-        /* 移动端微信加好友弹窗 */
+        .copy-success-tooltip i {
+            font-size: 17.6px; /* 放大图标10%（从16px到17.6px） */
+        }
+        
+        /* 维护中提示 - 垂直居中显示，放大10% */
+        .developing-tooltip {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.77); /* 放大10%（从0.7到0.77） */
+            background: #FF9800;
+            color: white;
+            padding: 13px 22px; /* 放大内边距10% */
+            border-radius: 8.8px; /* 放大圆角10% */
+            font-size: 14.3px; /* 放大字体10%（从13px到14.3px） */
+            font-weight: 500;
+            box-shadow: 0 8.8px 22px rgba(0, 0, 0, 0.2); /* 放大阴影10% */
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8.8px; /* 放大间隙10% */
+            pointer-events: none;
+            transform-origin: center; /* 确保从中心缩放 */
+        }
+        
+        .developing-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(0.77); /* 保持放大状态 */
+        }
+        
+        .developing-tooltip i {
+            font-size: 17.6px; /* 放大图标10%（从16px到17.6px） */
+        }
+        
+        /* 微信二维码弹窗 - 遮罩颜色改为深色 */
         .wechat-popup {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7); /* 深色遮罩 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -156,6 +267,8 @@
             transform: scale(0.9);
             transition: transform 0.3s ease;
             position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); /* 增加弹窗阴影 */
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
         .wechat-popup.active .wechat-content {
@@ -226,10 +339,22 @@
             margin-top: 10px;
             width: 100%;
             font-weight: 500;
+            outline: none !important; /* 移除焦点轮廓 */
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1); /* 添加阴影 */
         }
         
         .wechat-button:hover {
             background: #06AE56;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2); /* 悬停时增加阴影 */
+        }
+        
+        .wechat-button:focus {
+            outline: none !important; /* 移除焦点轮廓 */
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1); /* 保持阴影 */
+        }
+        
+        .wechat-button:active {
+            transform: scale(0.98); /* 点击时的轻微缩放效果 */
         }
         
         .close-btn {
@@ -248,6 +373,7 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            outline: none !important; /* 移除焦点轮廓 */
         }
         
         .close-btn:hover {
@@ -255,79 +381,8 @@
             background: #f5f5f5;
         }
         
-        .qrcode-title {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: 500;
-            font-family: 'Futura Md BT', sans-serif;
-        }
-        
-        .qrcode-image {
-            width: 180px;
-            height: 180px;
-            background-color: #f5f5f5;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid #eee;
-        }
-        
-        .qrcode-image img {
-            max-width: 100%;
-            height: auto;
-            -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
-        }
-        
-        .email-address {
-            font-size: 14px;
-            color: #666;
-            font-family: 'Futura Md BT', sans-serif;
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            position: relative;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        
-        .email-address:hover {
-            background-color: #f0f0f0;
-            color: #4A90E2;
-        }
-        
-        .email-address.copied::after {
-            content: "✓ 邮箱已复制";
-            position: absolute;
-            top: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #4CAF50;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            animation: fadeOut 2s ease forwards;
-            z-index: 10;
-        }
-        
-        .email-label {
-            display: inline-block;
-
-        }
-        
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { opacity: 0; }
+        .close-btn:focus {
+            outline: none !important; /* 移除焦点轮廓 */
         }
         
         .footer {
@@ -350,16 +405,44 @@
                 transform: none;
             }
             
-            .email-address:hover {
-                background-color: transparent;
-                color: #666;
+            .social-icon:hover {
+                transform: none;
+                box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+                background-color: #555;
+            }
+            
+            .social-icon.image-icon:hover {
+                background-color: #555;
+            }
+            
+            .wechat-button:hover {
+                transform: none;
+                box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
             }
         }
         
         /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .main-container {
+                width: 10%; /* 中等屏幕调整为20% */
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .main-container {
+                width: 10%; /* 平板屏幕调整为30% */
+            }
+        }
+        
         @media (max-width: 768px) {
+            .main-container {
+                width: 10%; /* 小屏幕调整为40% */
+                gap: 30px;
+                min-width: 250px;
+            }
+            
             .logo-container {
-                padding: 30px 40px;
+                padding: 30px 25px;
             }
             
             .brand-name {
@@ -367,18 +450,19 @@
                 margin-top: 20px;
             }
             
-            .qrcode-popup {
-                width: 220px;
+            .social-media {
+                gap: 12px;
+                padding: 12px 20px;
             }
             
-            .qrcode-image {
-                width: 160px;
-                height: 160px;
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
             }
             
-            /* 在移动端隐藏桌面端二维码弹窗 */
-            .qrcode-popup {
-                display: none;
+            .social-icon.image-icon i {
+                font-size: 20px;
             }
             
             /* 移动端触摸反馈 */
@@ -386,21 +470,32 @@
                 transform: scale(0.95);
             }
             
-            .email-address:active {
-                background-color: #f0f0f0;
+            .copy-success-tooltip,
+            .developing-tooltip {
+                padding: 11px 18px; /* 移动端调整内边距 */
+                font-size: 12.1px; /* 移动端字体放大10% */
+                transform: translate(-50%, -50%) scale(0.715); /* 移动端放大10%（从0.65到0.715） */
+            }
+            
+            .copy-success-tooltip i,
+            .developing-tooltip i {
+                font-size: 15.4px; /* 移动端图标放大10%（从14px到15.4px） */
+            }
+            
+            .wechat-button:active {
+                transform: scale(0.95); /* 移动端点击效果 */
             }
         }
         
-        @media (min-width: 769px) {
-            /* 在桌面端隐藏移动端微信弹窗 */
-            .wechat-popup {
-                display: none;
+        @media (max-width: 576px) {
+            .main-container {
+                width: 20%; /* 手机屏幕调整为50% */
+                gap: 25px;
+                min-width: 200px;
             }
-        }
-        
-        @media (max-width: 480px) {
+            
             .logo-container {
-                padding: 25px 30px;
+                padding: 25px 20px;
             }
             
             .brand-name {
@@ -408,13 +503,31 @@
                 margin-top: 15px;
             }
             
-            .qrcode-popup {
-                width: 200px;
+            .social-media {
+                gap: 10px;
+                padding: 10px 15px;
             }
             
-            .qrcode-image {
-                width: 150px;
-                height: 150px;
+            .social-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .social-icon.image-icon i {
+                font-size: 18px;
+            }
+            
+            .copy-success-tooltip,
+            .developing-tooltip {
+                padding: 9px 16px; /* 手机端调整内边距 */
+                font-size: 11px; /* 手机端字体放大10% */
+                transform: translate(-50%, -50%) scale(0.66); /* 手机端放大10%（从0.6到0.66） */
+            }
+            
+            .copy-success-tooltip i,
+            .developing-tooltip i {
+                font-size: 13.2px; /* 手机端图标放大10%（从12px到13.2px） */
             }
             
             .wechat-content {
@@ -426,9 +539,34 @@
                 width: 180px;
                 height: 180px;
             }
+        }
+        
+        @media (max-width: 400px) {
+            .social-media {
+                gap: 8px;
+                padding: 8px 12px;
+            }
             
-            .email-address {
-                font-size: 13px;
+            .social-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .social-icon.image-icon i {
+                font-size: 16px;
+            }
+            
+            .copy-success-tooltip,
+            .developing-tooltip {
+                padding: 7px 13px; /* 小屏幕调整内边距 */
+                font-size: 9.9px; /* 小屏幕字体放大10% */
+                transform: translate(-50%, -50%) scale(0.605); /* 小屏幕放大10%（从0.55到0.605） */
+            }
+            
+            .copy-success-tooltip i,
+            .developing-tooltip i {
+                font-size: 12.1px; /* 小屏幕图标放大10%（从11px到12.1px） */
             }
         }
         
@@ -447,45 +585,76 @@
                 color: #f0f0f0;
             }
             
-            .qrcode-popup, .wechat-content {
+            .wechat-popup {
+                background: rgba(0, 0, 0, 0.8); /* 深色模式下的遮罩更深 */
+            }
+            
+            .wechat-content {
                 background: #2d2d2d;
                 color: #f0f0f0;
             }
             
-            .qrcode-title, .wechat-title {
+            .wechat-title {
                 color: #f0f0f0;
             }
             
-            .wechat-tip, .email-address {
+            .wechat-tip {
                 color: #ccc;
             }
             
-            .wechat-image, .qrcode-image {
+            .wechat-image {
                 background-color: #3d3d3d;
                 border-color: #555;
             }
+            
+            .social-media {
+                background-color: rgba(30, 30, 30, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .social-icon {
+                background-color: #555;
+            }
+            
+            .social-icon.image-icon {
+                background-color: #555; /* 深色模式下保持深灰色 */
+            }
+            
+            .social-icon:hover {
+                background-color: #333;
+            }
+            
+            .social-icon.image-icon:hover {
+                background-color: #333; /* 深色模式下的悬停深灰色 */
+            }
+            
+            .copy-success-tooltip {
+                background: #4CAF50;
+                color: white;
+            }
+            
+            .developing-tooltip {
+                background: #FF9800;
+                color: white;
+            }
         }
         
+		/* 移除所有社交图标的焦点轮廓，包括图片图标 */
+	.social-icon:focus, .social-icon.image-icon:focus {
+		outline: none !important;
+		box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1) !important;
+		}
+
+		/* 对于图片图标，还需要移除链接的焦点样式 */
+	.social-icon.image-icon:focus-visible {
+		outline: none !important;
+		box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1) !important;
+		}
+
         /* 无障碍优化 */
-        .logo-overlay:focus, .email-address:focus, .wechat-button:focus, .close-btn:focus {
+        .logo-overlay:focus {
             outline: 2px solid #4A90E2;
             outline-offset: 2px;
-        }
-        
-        /* 加载动画 */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
         
         /* 保护层 */
@@ -504,43 +673,58 @@
     <!-- 保护层 -->
     <div class="protection-layer" id="protectionLayer"></div>
     
-    <div class="logo-container">
-        <div class="logo-wrapper">
-            <div class="logo-overlay" id="logoOverlay"></div>
-            <img src="./images/tx.png" alt="LOGO" class="logo">
+    <!-- 邮箱复制成功提示 -->
+    <div class="copy-success-tooltip" id="copySuccessTooltip">
+        <i class="fas fa-check-circle"></i>
+        <span>邮箱已复制</span>
+    </div>
+    
+    <!-- 维护中提示 -->
+    <div class="developing-tooltip" id="developingTooltip">
+        <i class="fas fa-tools"></i>
+        <span>页面维护中</span>
+    </div>
+    
+    <div class="main-container">
+        <div class="logo-container">
+            <div class="logo-wrapper">
+                <div class="logo-overlay" id="logoOverlay"></div>
+                <img src="./images/tx.png" alt="LOGO" class="logo">
+            </div>
+            <div class="brand-name">ZHANG</div>
         </div>
-        <div class="brand-name">ZHANG</div>
         
-        <!-- 桌面端微信二维码弹出层 -->
-        <div class="qrcode-popup">
-            <div class="qrcode-title">微信扫码加我好友</div>
-            <div class="qrcode-image">
-                <img src="./images/wechat-qr.jpg" alt="微信加好友二维码">
+        <!-- 社交媒体图标区域 -->
+        <div class="social-media">
+            <!-- 邮箱图标 - 点击复制邮箱 -->
+            <div class="social-icon" id="emailIcon" title="邮箱地址">
+                <i class="fas fa-envelope"></i>
             </div>
-            <div class="email-address" id="copyEmail">
-                <span class="email-label">email:</span>
-                hi@unclezhang.com
+            
+            <!-- 微信图标 - 点击弹出二维码 -->
+            <div class="social-icon" id="wechatIcon" title="微信二维码">
+                <i class="fab fa-weixin"></i>
             </div>
+            
+            <!-- 图片图标 - 点击显示维护中提示 -->
+            <a href="javascript:void(0);" class="social-icon image-icon" id="imageIcon" title="作品展示">
+                <i class="fas fa-image"></i>
+            </a>
         </div>
     </div>
     
-    <!-- 移动端微信加好友弹窗 -->
+    <!-- 微信二维码弹窗 -->
     <div class="wechat-popup" id="wechatPopup">
         <div class="wechat-content">
             <button class="close-btn" id="closePopup" aria-label="关闭">×</button>
-            <div class="wechat-title">添加微信好友</div>
+            <div class="wechat-title">微信扫一扫</div>
             <div class="qrcode-wrapper">
-                <div class="qrcode-overlay" id="qrcodeOverlay"></div>
                 <div class="wechat-image">
                     <img src="./images/wechat-qr.jpg" alt="微信加好友二维码">
                 </div>
             </div>
             <div class="wechat-tip">
-                长按识别二维码，添加微信好友
-            </div>
-            <div class="email-address" id="copyMobileEmail">
-                <span class="email-label">email:</span>
-                hi@unclezhang.com
+                添加微信好友，开始在线聊天
             </div>
             <button class="wechat-button" id="copyWechatId">复制微信号</button>
         </div>
@@ -552,15 +736,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const copyEmailElement = document.getElementById('copyEmail');
-            const copyMobileEmailElement = document.getElementById('copyMobileEmail');
-            const logoOverlay = document.getElementById('logoOverlay');
-            const qrcodeOverlay = document.getElementById('qrcodeOverlay');
+            const emailIcon = document.getElementById('emailIcon');
+            const wechatIcon = document.getElementById('wechatIcon');
+            const imageIcon = document.getElementById('imageIcon');
             const wechatPopup = document.getElementById('wechatPopup');
             const closePopup = document.getElementById('closePopup');
             const copyWechatId = document.getElementById('copyWechatId');
             const currentYearElement = document.getElementById('currentYear');
             const protectionLayer = document.getElementById('protectionLayer');
+            const copySuccessTooltip = document.getElementById('copySuccessTooltip');
+            const developingTooltip = document.getElementById('developingTooltip');
             
             // 设置当前年份
             currentYearElement.textContent = new Date().getFullYear();
@@ -631,29 +816,72 @@
             
             // ========== 正常功能 ==========
             
+            // 用于管理当前显示的提示
+            let currentActiveTooltip = null;
+            let currentTooltipTimeout = null;
+            
+            // 隐藏所有提示
+            function hideAllTooltips() {
+                copySuccessTooltip.classList.remove('show');
+                developingTooltip.classList.remove('show');
+                wechatPopup.classList.remove('active');
+                
+                // 清除之前的定时器
+                if (currentTooltipTimeout) {
+                    clearTimeout(currentTooltipTimeout);
+                    currentTooltipTimeout = null;
+                }
+            }
+            
+            // 显示提示
+            function showTooltip(tooltip, message, duration = 2000) {
+                // 先隐藏所有提示
+                hideAllTooltips();
+                
+                // 如果是微信弹窗，特殊处理
+                if (tooltip === wechatPopup) {
+                    tooltip.classList.add('active');
+                    currentActiveTooltip = tooltip;
+                    return;
+                }
+                
+                // 更新提示文本（如果不是微信弹窗）
+                if (tooltip !== wechatPopup && message) {
+                    tooltip.querySelector('span').textContent = message;
+                }
+                
+                // 显示新提示
+                tooltip.classList.add('show');
+                currentActiveTooltip = tooltip;
+                
+                // 设置自动隐藏定时器
+                currentTooltipTimeout = setTimeout(() => {
+                    tooltip.classList.remove('show');
+                    currentActiveTooltip = null;
+                    currentTooltipTimeout = null;
+                }, duration);
+            }
+            
             // 复制邮箱地址功能
-            function copyEmail(emailElement) {
+            emailIcon.addEventListener('click', function() {
                 const email = 'hi@unclezhang.com';
                 
                 // 优先使用现代 Clipboard API
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(email)
                         .then(() => {
-                            emailElement.classList.add('copied');
-                            setTimeout(() => {
-                                emailElement.classList.remove('copied');
-                            }, 2000);
+                            showTooltip(copySuccessTooltip, '邮箱已复制');
                         })
                         .catch(err => {
-                            fallbackCopyText(email, emailElement);
+                            fallbackCopyText(email);
                         });
                 } else {
-                    fallbackCopyText(email, emailElement);
+                    fallbackCopyText(email);
                 }
-            }
+            });
             
             // 传统复制方法
-            function fallbackCopyText(text, emailElement) {
+            function fallbackCopyText(text) {
                 const tempTextArea = document.createElement('textarea');
                 tempTextArea.value = text;
                 tempTextArea.style.position = 'fixed';
@@ -666,10 +894,7 @@
                 try {
                     const successful = document.execCommand('copy');
                     if (successful) {
-                        emailElement.classList.add('copied');
-                        setTimeout(() => {
-                            emailElement.classList.remove('copied');
-                        }, 2000);
+                        showTooltip(copySuccessTooltip, '邮箱已复制');
                     }
                 } catch (err) {
                     console.error('复制失败:', err);
@@ -678,53 +903,20 @@
                 document.body.removeChild(tempTextArea);
             }
             
-            // 桌面端邮箱复制
-            copyEmailElement.addEventListener('click', function() {
-                copyEmail(this);
-            });
-            
-            // 移动端邮箱复制
-            copyMobileEmailElement.addEventListener('click', function() {
-                copyEmail(this);
-            });
-            
-            // 检测设备类型
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            // 移动端点击LOGO打开微信弹窗
-            logoOverlay.addEventListener('click', function() {
-                if (isMobile) {
-                    wechatPopup.classList.add('active');
-                }
-            });
-            
-            // 桌面端长按LOGO也打开微信弹窗（便于测试）
-            let pressTimer;
-            logoOverlay.addEventListener('mousedown', function() {
-                if (!isMobile) {
-                    pressTimer = setTimeout(() => {
-                        wechatPopup.classList.add('active');
-                    }, 1000);
-                }
-            });
-            
-            logoOverlay.addEventListener('mouseup', function() {
-                clearTimeout(pressTimer);
-            });
-            
-            logoOverlay.addEventListener('mouseleave', function() {
-                clearTimeout(pressTimer);
+            // 微信图标点击打开弹窗
+            wechatIcon.addEventListener('click', function() {
+                showTooltip(wechatPopup);
             });
             
             // 关闭弹窗
             closePopup.addEventListener('click', function() {
-                wechatPopup.classList.remove('active');
+                hideAllTooltips();
             });
             
             // 点击弹窗背景关闭
             wechatPopup.addEventListener('click', function(e) {
                 if (e.target === wechatPopup) {
-                    wechatPopup.classList.remove('active');
+                    hideAllTooltips();
                 }
             });
             
@@ -737,12 +929,16 @@
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(wechatId)
                         .then(() => {
-                            button.innerHTML = '<span class="loading"></span> 已复制';
+                            button.innerHTML = '已复制';
                             button.style.background = '#4CAF50';
+                            
+                            // 添加点击后的视觉反馈
+                            button.style.transform = 'scale(0.98)';
                             
                             setTimeout(() => {
                                 button.innerHTML = '复制微信号';
                                 button.style.background = '#07C160';
+                                button.style.transform = 'scale(1)';
                             }, 2000);
                         })
                         .catch(err => {
@@ -751,6 +947,9 @@
                 } else {
                     fallbackCopyWechatId(wechatId, button);
                 }
+                
+                // 移除焦点，防止出现蓝色边框
+                button.blur();
             });
             
             // 传统复制微信号方法
@@ -767,12 +966,16 @@
                 try {
                     const successful = document.execCommand('copy');
                     if (successful) {
-                        button.innerHTML = '<span class="loading"></span> 已复制';
+                        button.innerHTML = '已复制';
                         button.style.background = '#4CAF50';
+                        
+                        // 添加点击后的视觉反馈
+                        button.style.transform = 'scale(0.98)';
                         
                         setTimeout(() => {
                             button.innerHTML = '复制微信号';
                             button.style.background = '#07C160';
+                            button.style.transform = 'scale(1)';
                         }, 2000);
                     }
                 } catch (err) {
@@ -780,12 +983,21 @@
                 }
                 
                 document.body.removeChild(tempTextArea);
+                
+                // 移除焦点，防止出现蓝色边框
+                button.blur();
             }
             
-            // ESC键关闭弹窗
+            // 图片图标点击显示维护中提示
+            imageIcon.addEventListener('click', function(e) {
+                e.preventDefault(); // 阻止链接默认行为
+                showTooltip(developingTooltip, '页面维护中');
+            });
+            
+            // ESC键关闭所有弹窗
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
-                    wechatPopup.classList.remove('active');
+                    hideAllTooltips();
                 }
             });
             
