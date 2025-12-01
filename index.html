@@ -39,6 +39,7 @@
             width: 10%;
             max-width: 500px;
             min-width: 240px;
+            transform: scale(1);
         }
         
         .logo-container {
@@ -47,24 +48,45 @@
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 20px 20px 0 0;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease; /* 只保留阴影过渡效果 */
+            transition: all 0.3s ease;
             width: 100%;
             position: relative;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-bottom: none;
             margin-bottom: 0;
-
+            /* 添加虚线边框效果 */
+            border-bottom: 2px dashed rgba(200, 200, 200, 0.7);
         }
         
-		.logo-container:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.15);
+        /* 添加虚线装饰效果 - 现在在logo-container上 */
+        .logo-container::before,
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 0 0 4px rgba(255, 255, 255, 0.95),
+                0 0 0 1px rgba(200, 200, 200, 0.7);
+            z-index: 1;
         }
         
-        /* 取消social-media的跟随效果 */
-        .logo-container:hover + .social-media {
+        .logo-container::before {
+            left: -10px;
+        }
+        
+        .logo-container::after {
+            right: -10px;
+        }
+ 
+        /* 移除悬停效果 */
+        .logo-container:hover {
             transform: none;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
         
         .logo-wrapper {
@@ -76,7 +98,6 @@
             width: 120px;
             height: auto;
             filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
-            /* 保留logo的浮动动画 */
             animation: float 6s ease-in-out infinite;
             cursor: pointer;
             transition: transform 0.3s ease;
@@ -100,7 +121,6 @@
         
         .logo:hover {
             transform: scale(1.1);
-            /* 悬停时暂停浮动动画 */
             animation-play-state: paused;
         }
         
@@ -126,7 +146,6 @@
             font-family: 'Futura Md BT', sans-serif;
         }
         
-        /* 社交媒体图标区域 - 修改为门票/明信片样式 */
         .social-media {
             display: flex;
             gap: 15px;
@@ -138,35 +157,26 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            /* 添加上边框虚线效果，模拟门票/明信片样式 */
-            border-top: 2px dashed rgba(200, 200, 200, 0.7);
             width: 100%;
             margin-top: -1px;
             position: relative;
+            transition: transform 0.3s ease;
         }
         
-        /* 添加虚线装饰效果 */
+        /* 移除social-media原来的虚线装饰效果 */
         .social-media::before,
         .social-media::after {
-            content: '';
-            position: absolute;
-            top: -10px;
-            width: 20px;
-            height: 20px;
-            background-color: transparent;
-            border-radius: 50%;
-            box-shadow: 
-                inset 0 0 0 4px rgba(255, 255, 255, 0.95),
-                0 0 0 1px rgba(200, 200, 200, 0.7);
-            z-index: 1;
+            display: none;
         }
         
-        .social-media::before {
-            left: -10px;
+        /* 移除social-media原来的虚线边框 */
+        .social-media {
+            border-top: none;
         }
         
-        .social-media::after {
-            right: -10px;
+        /* 添加点击时的跟随效果 */
+        .logo-container.active + .social-media {
+            transform: translateY(+10px);
         }
         
         .social-icon {
@@ -185,7 +195,6 @@
             text-decoration: none;
         }
         
-        /* 图片图标样式 - 统一为深色 */
         .social-icon.image-icon {
             background-color: #555;
             overflow: hidden;
@@ -195,7 +204,6 @@
             font-size: 22px;
         }
         
-        /* 保留社交图标的弹跳效果 */
         .social-icon:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
@@ -206,7 +214,6 @@
             background-color: #333;
         }
         
-        /* 邮箱复制成功提示 - 垂直居中显示 */
         .copy-success-tooltip {
             position: fixed;
             top: 50%;
@@ -240,7 +247,6 @@
             font-size: 17.6px;
         }
         
-        /* 维护中提示 - 垂直居中显示 */
         .developing-tooltip {
             position: fixed;
             top: 50%;
@@ -274,7 +280,6 @@
             font-size: 17.6px;
         }
         
-        /* 微信二维码弹窗 - 遮罩颜色改为深色 */
         .wechat-popup {
             position: fixed;
             top: 0;
@@ -473,12 +478,33 @@
             .main-container {
                 width: 10%;
                 gap: 0;
-                min-width: 250px;
+                min-width: 200px;
+                transform: scale(1.2);
             }
             
             .logo-container {
                 padding: 30px 25px;
                 border-radius: 15px 15px 0 0;
+                border-bottom: 6px dashed rgba(200, 200, 200, 0.7);
+            }
+            
+            /* 调整虚线装饰效果 */
+            .logo-container::before,
+            .logo-container::after {
+                bottom: -8px;
+                width: 16px;
+                height: 16px;
+                box-shadow: 
+                    inset 0 0 0 3px rgba(255, 255, 255, 0.95),
+                    0 0 0 1px rgba(200, 200, 200, 0.7);
+            }
+            
+            .logo-container::before {
+                left: -8px;
+            }
+            
+            .logo-container::after {
+                right: -8px;
             }
             
             .brand-name {
@@ -490,26 +516,6 @@
                 gap: 12px;
                 padding: 12px 20px;
                 border-radius: 0 0 15px 15px;
-                border-top: 2px dashed rgba(200, 200, 200, 0.7);
-            }
-            
-            /* 移动端调整虚线装饰效果 */
-            .social-media::before,
-            .social-media::after {
-                top: -8px;
-                width: 16px;
-                height: 16px;
-                box-shadow: 
-                    inset 0 0 0 3px rgba(255, 255, 255, 0.95),
-                    0 0 0 1px rgba(200, 200, 200, 0.7);
-            }
-            
-            .social-media::before {
-                left: -8px;
-            }
-            
-            .social-media::after {
-                right: -8px;
             }
             
             .social-icon {
@@ -562,11 +568,32 @@
                 width: 20%;
                 gap: 0;
                 min-width: 200px;
+                transform: scale(1.3);
             }
             
             .logo-container {
                 padding: 25px 20px;
                 border-radius: 12px 12px 0 0;
+                border-bottom: 2px dashed rgba(200, 200, 200, 0.7);
+            }
+            
+            /* 手机端调整虚线装饰效果 */
+            .logo-container::before,
+            .logo-container::after {
+                bottom: -7px;
+                width: 14px;
+                height: 14px;
+                box-shadow: 
+                    inset 0 0 0 2.5px rgba(255, 255, 255, 0.95),
+                    0 0 0 1px rgba(200, 200, 200, 0.7);
+            }
+            
+            .logo-container::before {
+                left: -7px;
+            }
+            
+            .logo-container::after {
+                right: -7px;
             }
             
             .brand-name {
@@ -578,26 +605,6 @@
                 gap: 10px;
                 padding: 10px 15px;
                 border-radius: 0 0 12px 12px;
-                border-top: 2px dashed rgba(200, 200, 200, 0.7);
-            }
-            
-            /* 手机端调整虚线装饰效果 */
-            .social-media::before,
-            .social-media::after {
-                top: -7px;
-                width: 14px;
-                height: 14px;
-                box-shadow: 
-                    inset 0 0 0 2.5px rgba(255, 255, 255, 0.95),
-                    0 0 0 1px rgba(200, 200, 200, 0.7);
-            }
-            
-            .social-media::before {
-                left: -7px;
-            }
-            
-            .social-media::after {
-                right: -7px;
             }
             
             .social-icon {
@@ -641,17 +648,20 @@
         }
         
         @media (max-width: 400px) {
-            .social-media {
-                gap: 8px;
-                padding: 8px 12px;
-                border-radius: 0 0 10px 10px;
-                border-top: 2px dashed rgba(200, 200, 200, 0.7);
+            .main-container {
+                transform: scale(1.2);
+            }
+            
+            .logo-container {
+                padding: 25px 15px;
+                border-radius: 10px 10px 0 0;
+                border-bottom: 2px dashed rgba(200, 200, 200, 0.7);
             }
             
             /* 小屏幕调整虚线装饰效果 */
-            .social-media::before,
-            .social-media::after {
-                top: -6px;
+            .logo-container::before,
+            .logo-container::after {
+                bottom: -6px;
                 width: 12px;
                 height: 12px;
                 box-shadow: 
@@ -659,12 +669,18 @@
                     0 0 0 1px rgba(200, 200, 200, 0.7);
             }
             
-            .social-media::before {
+            .logo-container::before {
                 left: -6px;
             }
             
-            .social-media::after {
+            .logo-container::after {
                 right: -6px;
+            }
+            
+            .social-media {
+                gap: 8px;
+                padding: 8px 12px;
+                border-radius: 0 0 10px 10px;
             }
             
             .social-icon {
@@ -689,10 +705,6 @@
             .developing-tooltip i {
                 font-size: 12.1px;
             }
-            
-            .logo-container {
-                border-radius: 10px 10px 0 0;
-            }
         }
         
         /* 深色模式支持 */
@@ -705,10 +717,19 @@
                 background-color: rgba(30, 30, 30, 0.9);
                 color: #f0f0f0;
                 border-bottom: none;
+                border-bottom: 2px dashed rgba(150, 150, 150, 0.7);
             }
             
             .brand-name {
                 color: #f0f0f0;
+            }
+            
+            /* 深色模式下调整虚线装饰效果 */
+            .logo-container::before,
+            .logo-container::after {
+                box-shadow: 
+                    inset 0 0 0 4px rgba(30, 30, 30, 0.9),
+                    0 0 0 1px rgba(150, 150, 150, 0.7);
             }
             
             .wechat-popup {
@@ -736,16 +757,6 @@
             .social-media {
                 background-color: rgba(30, 30, 30, 0.9);
                 border: 1px solid rgba(255, 255, 255, 0.1);
-                /* 深色模式下调整虚线颜色 */
-                border-top: 2px dashed rgba(150, 150, 150, 0.7);
-            }
-            
-            /* 深色模式下调整虚线装饰效果 */
-            .social-media::before,
-            .social-media::after {
-                box-shadow: 
-                    inset 0 0 0 4px rgba(30, 30, 30, 0.9),
-                    0 0 0 1px rgba(150, 150, 150, 0.7);
             }
             
             .social-icon {
@@ -775,13 +786,12 @@
             }
         }
         
-        /* 移除所有社交图标的焦点轮廓，包括图片图标 */
+        /* 移除所有社交图标的焦点轮廓 */
         .social-icon:focus, .social-icon.image-icon:focus {
             outline: none !important;
             box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1) !important;
         }
 
-        /* 对于图片图标，还需要移除链接的焦点样式 */
         .social-icon.image-icon:focus-visible {
             outline: none !important;
             box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1) !important;
@@ -818,11 +828,11 @@
     <!-- 维护中提示 -->
     <div class="developing-tooltip" id="developingTooltip">
         <i class="fas fa-tools"></i>
-        <span>页面维护中</span>
+        <span>内容维护中</span>
     </div>
     
     <div class="main-container">
-        <div class="logo-container">
+        <div class="logo-container" id="logoContainer">
             <div class="logo-wrapper">
                 <div class="logo-overlay" id="logoOverlay"></div>
                 <img src="./images/tx.png" alt="LOGO" class="logo">
@@ -872,6 +882,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const logoContainer = document.getElementById('logoContainer');
+            const logoOverlay = document.getElementById('logoOverlay');
             const emailIcon = document.getElementById('emailIcon');
             const wechatIcon = document.getElementById('wechatIcon');
             const imageIcon = document.getElementById('imageIcon');
@@ -885,6 +897,23 @@
             
             // 设置当前年份
             currentYearElement.textContent = new Date().getFullYear();
+            
+            // ========== 点击弹出效果 ==========
+            let isLogoActive = false;
+            
+            logoOverlay.addEventListener('click', function(e) {
+                e.stopPropagation();
+                isLogoActive = !isLogoActive;
+                logoContainer.classList.toggle('active', isLogoActive);
+            });
+            
+            // 点击页面其他地方关闭弹出效果
+            document.addEventListener('click', function(e) {
+                if (isLogoActive && !logoContainer.contains(e.target)) {
+                    isLogoActive = false;
+                    logoContainer.classList.remove('active');
+                }
+            });
             
             // ========== 图片保护功能 ==========
             
@@ -1126,7 +1155,7 @@
             // 图片图标点击显示维护中提示
             imageIcon.addEventListener('click', function(e) {
                 e.preventDefault();
-                showTooltip(developingTooltip, '页面维护中');
+                showTooltip(developingTooltip, '内容维护中');
             });
             
             // ESC键关闭所有弹窗
