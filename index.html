@@ -849,8 +849,11 @@
                 <i class="fab fa-weixin"></i>
             </div>
             
-            <!-- 图片图标 - 点击显示维护中提示 -->
-            <a href="javascript:void(0);" class="social-icon image-icon" id="imageIcon">
+            <!-- 图片图标 - 改为指向指定链接 -->
+            <a href="https://caomei.quickconnect.cn/d/s/163AJ3s91AYIuCIRebSoF0LT6sfO9oRL/kwIxzPBSGDk4AZWmsDEL3nOPXfbQ12Ej-nLQAV__OyAw" 
+               target="_blank" 
+               class="social-icon image-icon" 
+               id="imageIcon">
                 <i class="fas fa-image"></i>
             </a>
         </div>
@@ -1148,12 +1151,6 @@
                 // 移除焦点，防止出现蓝色边框
                 button.blur();
             }
-            
-            // 图片图标点击显示维护中提示
-            imageIcon.addEventListener('click', function(e) {
-                e.preventDefault();
-                showTooltip(developingTooltip, '内容维护中');
-            });
             
             // ESC键关闭所有弹窗
             document.addEventListener('keydown', function(e) {
